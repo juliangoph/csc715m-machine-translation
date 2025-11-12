@@ -1,0 +1,5 @@
+# Ignore the experiments folder and all its contents
+experiments/
+
+# Optional: keep a placeholder file if the folder should exist in the repo
+!experiments/.gitkeep
