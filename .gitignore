@@ -1,5 +1,6 @@
 # Ignore everything in experiments/
 experiments/*
+pdfs/*
 demo.mp4
 
 # But keep this one placeholder file

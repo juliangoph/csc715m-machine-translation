@@ -12,6 +12,7 @@ import argparse
 import random
 import re
 from pathlib import Path
+import pandas as pd
 
 
 def normalize(text: str) -> str:
@@ -33,6 +34,15 @@ def read_lines(path: Path):
             yield line
 
 
+def count_with_pandas(path: Path):
+    """Return number of *actual* pairs as parsed by pandas."""
+    try:
+        df = pd.read_csv(path, sep="\t", header=None, names=["src", "tgt"])
+        return len(df), None
+    except Exception as e:
+        return None, str(e)
+
+
 def main(args):
     src_path = Path(args.src)
     tgt_path = Path(args.tgt)
@@ -45,7 +55,7 @@ def main(args):
     n = min(len(src_lines), len(tgt_lines))
     pairs = list(zip(src_lines[:n], tgt_lines[:n]))
 
-    # Filter too short or long
+    # Length filter
     filtered = [
         (s, t)
         for s, t in pairs
@@ -66,14 +76,24 @@ def main(args):
         "test.tsv": filtered[n_train + n_dev:],
     }
 
+    print("\nWriting splits...")
     for name, data in splits.items():
         out_path = out_dir / name
         with open(out_path, "w", encoding="utf-8") as f:
             for s, t in data:
                 f.write(f"{s}\t{t}\n")
-        print(f"Wrote {len(data):6d} pairs → {out_path}")
+        print(f"  Wrote {len(data):6d} lines → {out_path}")
 
-    print(f"\nTotal usable pairs: {total:,}")
+    print("\nVerifying actual pair counts via pandas:")
+    for name in ["train.tsv", "dev.tsv", "test.tsv"]:
+        path = out_dir / name
+        count, err = count_with_pandas(path)
+        if err is not None:
+            print(f"  {name}: ERROR reading with pandas → {err}")
+        else:
+            print(f"  {name}: {count:6d} actual pairs (pandas-parsed)")
+
+    print(f"\nTotal usable pre-split pairs: {total:,}")
 
 
 if __name__ == "__main__":
