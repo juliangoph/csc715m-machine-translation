@@ -16,7 +16,7 @@ All scripts were rewritten for clarity and compatibility across environments.
 
 ------
 
-## **📁 Project Structure**
+## **Project Structure**
 
 ```
 project/
@@ -60,7 +60,7 @@ project/
 
 ------
 
-## **🔤 Language Setup**
+## **Language Setup**
 
 - **Source language → Cebuano (`ceb_Latn`)**
 - **Target language → Tagalog (`tgl_Latn`)**
@@ -69,7 +69,7 @@ These codes are used consistently across training, decoding, and evaluation.
 
 ------
 
-## **📘 Notebooks Overview**
+## **Notebooks Overview**
 
 ### **00_overview.ipynb**
 
